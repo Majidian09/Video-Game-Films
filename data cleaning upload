@@ -1,0 +1,54 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Dec 20 20:38:46 2023
+
+@author: majidian
+"""
+
+import pandas as pd
+
+
+#tables = pd.read_html('https://en.wikipedia.org/wiki/List_of_films_based_on_video_games')
+
+
+#i wanted to use SQL to take this further but i am having issues with programmes to run SQL
+
+df = pd.read_csv('my file location')
+
+
+df['Score(%)'] = df['Score'].str[:-1]
+
+df = df.drop('Score', axis = 1)
+
+#for x in df[]
+
+def transform(value):
+    """Transforms a value representing a box office amount.
+
+    Args:
+        value (str): The value to transform.
+
+    Returns:
+        float or None: The transformed value as a float, or None if the value
+            cannot be interpreted as a numeric box office amount.
+    """
+
+    if value.endswith("K"):
+        # Remove "K" and convert to float
+        value = float(value[:-1]) * 1000
+    elif value.endswith("M"):
+        # Remove "M" and convert to float
+        value = float(value[:-1]) * 1000000
+    elif value == "Box office value not found":
+        # Handle specific non-numeric value
+        value = None  # Or set a specific value like 0 if preferred
+    return value
+
+df["box_office_($)"] = df["box_office_($M)"].apply(transform)
+
+df = df.drop('box_office_($M)', axis = 1)
+#print(df.columns)
+
+df.to_csv('film_data_cleaned.csv')
+
